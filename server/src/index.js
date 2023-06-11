@@ -6,7 +6,6 @@ const store = new session.MemoryStore();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(express.static(path.join(__dirname, "..", "..", "front-end", "build")));
 app.use(session({
     name: "cookieMonster",
     secret: "my secret",
@@ -31,6 +30,7 @@ app.use((req, res, next) => {
 });
 
 app.listen(PORT, () => {console.log("Listening on port " + PORT)});
+app.use(express.static(path.join(__dirname, "..", "..", "front-end", "build")));
 
 postDataBase = {};
 users = {
@@ -124,7 +124,6 @@ app.post("/api/login", (req, res, next) => {
             res.cookie("name", username, {
                 maxAge: 3600000,
                 httpOnly: false,
-                domain: process.env.domain,
             });
             res.send({status: "logged in", data: req.sessionID});
         }
