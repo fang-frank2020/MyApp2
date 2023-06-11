@@ -31,7 +31,7 @@ function Login() {
     }
 
     function handleLogin() {
-        const result = fetch(dev ? "http://localhost:3001/api/login" : "https://travel-tour.onrender.com/api/login", {
+        const result = fetch("https://travel-tour.onrender.com/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
