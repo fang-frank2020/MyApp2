@@ -20,8 +20,10 @@ A web application where users can find their next travel destination from other 
     1. ```cd TravelTour/front-end```
 3. Run ```npm install```
 4. Run ```npm run build```
-3. ```cd``` into "server" folder
+5. ```cd``` out of front-end folder
+    1. ```cd ..```
+6. ```cd``` into "server" folder
     1. ```cd TravelTour/server```
-4. Run ```npm install```
-5. Run ```npm run start:dev```
-6. Open browser to http://localhost:3001/
+7. Run ```npm install```
+8. Run ```npm run start:dev```
+9. Open browser to http://localhost:3001/
