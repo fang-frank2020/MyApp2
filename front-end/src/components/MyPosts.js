@@ -6,7 +6,6 @@ import SearchBar from './SearchBar';
 import Cookies from 'js-cookie';
 
 function MyPosts() {
-    const dev = process.env.NODE_ENV === "development";
     const username = Cookies.get("name");
     
     const [localData, setLocalData] = useState([]);
@@ -18,9 +17,11 @@ function MyPosts() {
     const [editDate, setEditDate] = useState("");
 
 
+    const windowUrl = window.location.origin;
+
     //gets all the posts with given name
     useEffect(() => {
-        const result = fetch(dev ? "http://localhost:3001/api/getList" : "https://travel-tour.onrender.com/api/getList", {
+        const result = fetch(windowUrl + "/api/getList", {
             method: "GET",
         });
 
@@ -32,13 +33,13 @@ function MyPosts() {
                 setLocalData(Object.entries(data));
             })
 
-    }, [dev]);
+    }, [windowUrl]);
 
     //modifies editing to true for edited post
     //retrieves post that is being edited and sets relevant post data
     function startEdit(place, index) {
         try {
-            const result = fetch(dev ? "http://localhost:3001/api/edit" : "https://travel-tour.onrender.com/api/edit", {
+            const result = fetch(windowUrl + "/api/edit", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -67,7 +68,7 @@ function MyPosts() {
 
     //puts edited data into database and changes existing values
     function handleEdit(content, rating, name, date, place, index) {
-        const result = fetch(dev ? "http://localhost:3001/api/finishEdit" : "https://travel-tour.onrender.com/api/finishEdit", {
+        const result = fetch(windowUrl + "/api/finishEdit", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -95,7 +96,7 @@ function MyPosts() {
      //deletes post
      function handleDelete(place, index) {
         try {
-            const result = fetch(dev ? "http://localhost:3001/api/delete" : "https://travel-tour.onrender.com/api/delete", {
+            const result = fetch(windowUrl + "/api/delete", {
                 method: "DELETE",
                 headers: {
                     'Content-Type':'application/json',

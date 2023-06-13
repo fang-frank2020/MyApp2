@@ -37,6 +37,18 @@ users = {
     "user": "123",
 };
 
+function sendBack(req, res, next) {
+    res.status(200).sendFile(path.join(__dirname, "..", "..", "front-end", "build", "index.html"));
+};
+
+app.get("/", sendBack);
+app.get("/login", sendBack);
+app.get("/about", sendBack);
+app.get("/place/:key", sendBack);
+app.get("/myPosts", sendBack);
+app.get("/register", sendBack);
+
+
 app.get("/api/getList", (req, res, next) => {
     console.log("perfomed get");
     res.send(postDataBase);

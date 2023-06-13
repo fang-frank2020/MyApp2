@@ -4,7 +4,6 @@ import Header from './Header';
 import { Link } from 'react-router-dom';
 
 function Login() {
-    const dev = process.env.NODE_ENV === "development";
     //for username
     const [user, setUser] = useState("");
 
@@ -31,7 +30,8 @@ function Login() {
     }
 
     function handleLogin() {
-        const result = fetch(dev ? "http://localhost:3001/api/login" : "https://travel-tour.onrender.com/api/login", {
+        const windowUrl = window.location.origin
+        const result = fetch(windowUrl + "/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
