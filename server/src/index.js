@@ -129,7 +129,6 @@ app.post("/api/login", (req, res, next) => {
         res.send({status: "logged in", data: req.sessionID});
     }
     else {
-        //use some sort of hashing tool for production
         if (users[username] === password) {
             req.session.authenticated = true;
             req.session.user = username;
