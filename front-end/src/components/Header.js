@@ -20,6 +20,7 @@ function Header() {
                     {name !== undefined && <div className="HeaderItem">Logged in as "{name}"</div>}
                     {name === undefined && <HeaderItem value="Login" />}
                     {name !== undefined && <HeaderItem value="Logout"/>}
+                    
                 </div>
             </div>
         </>

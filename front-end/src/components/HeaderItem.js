@@ -3,19 +3,19 @@ import "./style.css";
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-function HeaderItem({ value }) {
+function HeaderItem({ value, dropdown }) {
 
-    function handleReset(value) {
+    function handleReset() {
         Cookies.remove("name");
         Cookies.remove("cookieMonster");
     }
     return (
         <>
-            {value === "Logout" && <Link className="HeaderItem" onClick={() => handleReset(value)} reloadDocument to="/">{value}</Link>}
+            {value === "Logout" && <Link className={!dropdown ? "HeaderItem" : "DropDown"} onClick={() => handleReset(value)} reloadDocument to="/">{value}</Link>}
             {value === "TravelTour" && <Link className="First" to="/"> {value} </Link>}
-            {(value === "Home") && <Link className="HeaderItem" to="/"> {value} </Link>}
-            {(value === "My posts") && <Link className="HeaderItem" to="/myPosts">{value}</Link>}
-            {value !== "Home" && value !== "TravelTour" && value !== "My posts" && value !== "Logout" && <Link className="HeaderItem" to={"/"+value.toLowerCase()}>{value} </Link>}
+            {(value === "Home") && <Link className={!dropdown ? "HeaderItem" : "DropDown"} to="/"> {value} </Link>}
+            {(value === "My posts") && <Link className={!dropdown ? "HeaderItem" : "DropDown"} to="/myPosts">{value}</Link>}
+            {value !== "Home" && value !== "TravelTour" && value !== "My posts" && value !== "Logout" && <Link className={!dropdown ? "HeaderItem" : "DropDown"} to={"/"+value.toLowerCase()}>{value} </Link>}
         </>
     );
 }
