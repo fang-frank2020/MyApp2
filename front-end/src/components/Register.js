@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import Header from './Header';
 function Register() {
-    const dev = process.env.NODE_ENV === "development";
+    const windowUrl = window.location.origin;
 
     //keeps track of username
     const [value, setValue] = useState("");
@@ -29,7 +29,7 @@ function Register() {
     }
 
     function handleRegister() {
-        const result = fetch(dev ? "http://localhost:3001/api/register" : "https://travel-tour.onrender.com/api/register",{
+        const result = fetch(windowUrl + "/api/register",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

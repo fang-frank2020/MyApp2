@@ -21,6 +21,7 @@ app.use(session({
 
 app.use(express.json());
 app.use((req, res, next) => {
+    //https://traveltour-frontend.onrender.com
     res.header("Access-Control-Allow-Origin", PORT === 3001 ? "http://localhost:3000" : "https://ashy-stone-0eb98320f.3.azurestaticapps.net/");
     res.header("Access-Control-Allow-Headers", "*");
     res.header('Access-Control-Allow-Credentials', true);
@@ -129,6 +130,7 @@ app.post("/api/login", (req, res, next) => {
         res.send({status: "logged in", data: req.sessionID});
     }
     else {
+        //use some sort of hashing tool for production
         if (users[username] === password) {
             req.session.authenticated = true;
             req.session.user = username;
