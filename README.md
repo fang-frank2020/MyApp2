@@ -1,7 +1,7 @@
 # TravelTour
 
 ## Demo
-To demo this web application, please visit travel-tour.azurewebsites.net
+To demo this web application, please visit [travel-tour.azurewebsites.net](https://travel-tour.azurewebsites.net/)
 
 
 ## Overview
