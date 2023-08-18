@@ -1,9 +1,8 @@
 # TravelTour
 
 ## Demo
-To demo this web application, please visit https://travel-tour.onrender.com/
-(please allow a few minutes for it to start, the deployment on Render requires
-some time to reboot itself)
+To demo this web application, please visit travel-tour.azurewebsites.net
+
 
 ## Overview
 A web application where users can find their next travel destination from other user reviews and general destination characteristics. Users can also post their own reviews of traveling locations and login to view their past posts and make edits.
