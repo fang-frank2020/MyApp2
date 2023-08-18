@@ -30,7 +30,8 @@ app.use((req, res, next) => {
 });
 
 app.listen(PORT, () => {console.log("Listening on port " + PORT)});
-app.use(express.static(path.join(__dirname, "..", "..", "front-end", "build")));
+console.log(path.join(__dirname, "..", "front-end", "build"));
+app.use(express.static(path.join(__dirname, "..", "front-end", "build")));
 
 postDataBase = {};
 users = {
@@ -38,7 +39,7 @@ users = {
 };
 
 function sendBack(req, res, next) {
-    res.status(200).sendFile(path.join(__dirname, "..", "..", "front-end", "build", "index.html"));
+    res.status(200).sendFile(path.join(__dirname, "..", "front-end", "build", "index.html"));
 };
 
 app.get("/", sendBack);
