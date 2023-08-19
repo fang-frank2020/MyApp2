@@ -125,7 +125,7 @@ app.post("/api/register", (req, res, next) => {
         
         results
         .then((response) => {
-            if (response.length < 2) {
+            if (response[0].length == 0) {
                 try {
                     db.promise().query(`INSERT INTO users (username, password) VALUES(
                         '${user}',
