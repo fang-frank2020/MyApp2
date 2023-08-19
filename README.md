@@ -2,6 +2,7 @@
 
 ## Demo
 To demo this web application, please visit [travel-tour.azurewebsites.net](https://travel-tour.azurewebsites.net/)
+(please allow a few minutes for deployment on Azure to spin up)
 
 
 ## Overview
