@@ -1,7 +1,23 @@
 const express = require('express');
 const path = require("path");
 const session = require("express-session");
+require('dotenv').config();
+const mysql = require('mysql2');
 const store = new session.MemoryStore();
+
+
+const db = mysql.createConnection({
+    host: process.env.CUSTOMCONNSTR_location,
+    user: process.env.CUSTOMCONNSTR_username,
+    password: process.env.CUSTOMCONNSTR_password,
+    database: process.env.CUSTOMCONNSTR_databaseName
+});
+
+db.connect((err) => {
+    if (err) throw err;
+    console.log("successfully connected");
+})
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -14,7 +30,7 @@ app.use(session({
     cookie: {
         httpOnly: false,
         maxAge: 3600000,
-        secure: false,               //for development use, for production, set to true
+        secure: false,
     },
     store: store,
 }))
@@ -30,7 +46,6 @@ app.use((req, res, next) => {
 });
 
 app.listen(PORT, () => {console.log("Listening on port " + PORT)});
-console.log(path.join(__dirname, "..", "front-end", "build"));
 app.use(express.static(path.join(__dirname, "..", "front-end", "build")));
 
 postDataBase = {};
@@ -59,7 +74,6 @@ app.get("/api/getList", (req, res, next) => {
 app.post("/api/add", (req, res, next) => {
     console.log("performed post");
     const newItem = req.body;
-    console.log(newItem);
     const name = newItem.key;
     if (postDataBase[name] !== undefined) {
         postDataBase[name].unshift(newItem.list);
@@ -68,28 +82,23 @@ app.post("/api/add", (req, res, next) => {
         postDataBase[name] = [];
         postDataBase[name].unshift(newItem.list);
     }
-    console.log(postDataBase);
     res.send(postDataBase);
 });
 
 app.delete("/api/delete", (req, res, next) => {
     console.log("performed delete");
-    console.log(req.body);
     const itemKey = req.body.key;
     const location = req.body.location;
     postDataBase[location].splice(itemKey, 1);
-    console.log(postDataBase);
     res.send(postDataBase);
 })
 
 app.put("/api/edit", (req, res, next) => {
     console.log("started edit");
-    console.log(req.body);
     const result = req.body;
     const place = result.place;
     const index = result.index;
     postDataBase[place][index].editing = true;
-    console.log(postDataBase[place]);
     res.send(postDataBase);
 });
 
@@ -98,7 +107,6 @@ app.post("/api/finishEdit", (req, res, next) => {
     const result = req.body;
     const index = result.index;
     const place = result.place;
-    console.log(postDataBase[place]);
     const post = postDataBase[place][index];
     post.content = result.content;
     post.rating = result.rating;
@@ -109,38 +117,74 @@ app.post("/api/finishEdit", (req, res, next) => {
 });
 
 app.post("/api/register", (req, res, next) => {
-    console.log(req.body);
     const user = req.body.value;
     const pass = req.body.pass;
-    if (!(user in users)) {
-        users[user] = pass;
-        res.send({status: "success"});
+
+    try {
+        let results = db.promise().query(`SELECT * FROM users WHERE username='${user}'`);
+        
+        results
+        .then((response) => {
+            if (response.length < 2) {
+                try {
+                    db.promise().query(`INSERT INTO users (username, password) VALUES(
+                        '${user}',
+                        '${pass}'
+                    )`)
+                    console.log("success");
+                }
+                catch(err) {
+                    console.log(err);
+                }
+                res.send({status: "success"});
+            }
+            else {
+                res.send({status: "failed"});
+            }
+        })
     }
-    else {
-        res.send({status: "failed"});
+    catch(err) {
+        console.log(err);
     }
 });
 
 app.post("/api/login", (req, res, next) => {
-    console.log(users);
     const username = req.body.value;
     const password = req.body.pass;
     if (req.session.authenticated) {
         req.session.user = username;
         res.send({status: "logged in", data: req.sessionID});
     }
+
     else {
-        //use some sort of hashing tool for production
-        if (users[username] === password) {
-            req.session.authenticated = true;
-            req.session.user = username;
-            res.cookie("name", username, {
-                maxAge: 3600000,
-                httpOnly: false,
-            });
-            res.send({status: "logged in", data: req.sessionID});
+        let storedPassword = null;
+        try {
+            let results = db.promise().query(`SELECT * FROM users WHERE username='${username}'`);
+            
+            results
+            .then((response) => {
+                if (response.length >= 2) {
+                    storedPassword = response[0][0].password;
+                    if (storedPassword === password) {
+                        req.session.authenticated = true;
+                        req.session.user = username;
+                        res.cookie("name", username, {
+                            maxAge: 3600000,
+                            httpOnly: false,
+                        });
+                        res.send({status: "logged in", data: req.sessionID});
+                    }
+                    else {
+                        res.send({status: "authentication error"});
+                    }
+                }
+                else {
+                    res.send({status: "authentication error"});
+                }
+            })
         }
-        else {
+        catch(err) {
+            console.log(err);
             res.send({status: "authentication error"});
         }
     }
