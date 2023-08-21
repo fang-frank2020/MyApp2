@@ -16,12 +16,12 @@ function SinglePost(props) {
     
     const matches = cookieName === userName && userName !== undefined;
 
-    function handleNameChange(event) {
-        setName(event.target.value);
+    async function handleNameChange(event) {
+        await setName(event.target.value);
     }
 
-    function handleDateChange(event) {
-        setDate(event.target.value);
+    async function handleDateChange(event) {
+        await setDate(event.target.value);
     }
 
     return (
@@ -48,11 +48,11 @@ function SinglePost(props) {
                             </div>
                         </div>
                         <div className="EditWrapper">
-                            {!add && matches && <button className="Edit" onClick={() => !editing && startEdit(place, index)}>Edit</button>}
-                            {add && !first && matches && <button className="Edit" onClick={() => handleEdit(content, rating, name, date, place, index)}>Finished Edit</button>}
+                            {!add && matches && <button className="Edit" onClick={async () => !editing && await startEdit(place, index)}>Edit</button>}
+                            {add && !first && matches && <button className="Edit" onClick={async () => await handleEdit(content, rating, name, date, place, index)}>Finished Edit</button>}
                         </div>
                         <div className="RemoveIconWrapper">
-                            {!first && matches && <AiFillDelete size={"1.5rem"} cursor={"pointer"} onClick={() => {deletePost(place, index)}}/>}
+                            {!first && matches && <AiFillDelete size={"1.5rem"} cursor={"pointer"} onClick={async () => {await deletePost(place, index)}}/>}
                         </div>
                     </div>
                     <Rating rating={rating} setRating={setRating} add={add}/>

@@ -20,26 +20,21 @@ function MyPosts() {
     const windowUrl = window.location.origin;
 
     //gets all the posts with given name
-    useEffect(() => {
-        const result = fetch(windowUrl + "/api/getList", {
+    useEffect(async () => {
+        const result = await fetch(windowUrl + "/api/getList", {
             method: "GET",
         });
 
-        result
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                setLocalData(Object.entries(data));
-            })
+        const data = result.json();
+        setLocalData(Object.entries(data));
 
     }, [windowUrl]);
 
     //modifies editing to true for edited post
     //retrieves post that is being edited and sets relevant post data
-    function startEdit(place, index) {
+    async function startEdit(place, index) {
         try {
-            const result = fetch(windowUrl + "/api/edit", {
+            const result = await fetch(windowUrl + "/api/edit", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -47,18 +42,13 @@ function MyPosts() {
                 body: JSON.stringify({place: place, index: index}),
             })
     
-            result
-                .then((response) => {
-                    return response.json();
-                })
-                .then((data) => {
-                    const item = data[place][index];
-                    setEditContent(item.content);
-                    setEditDate(item.date);
-                    setEditRating(item.rating);
-                    setEditName(item.name);
-                    setLocalData(Object.entries(data));
-                })
+            const data = result.json()
+            const item = data[place][index];
+            setEditContent(item.content);
+            setEditDate(item.date);
+            setEditRating(item.rating);
+            setEditName(item.name);
+            setLocalData(Object.entries(data));
         }
         catch(error) {
             console.log(error.message);
@@ -67,8 +57,8 @@ function MyPosts() {
     }
 
     //puts edited data into database and changes existing values
-    function handleEdit(content, rating, name, date, place, index) {
-        const result = fetch(windowUrl + "/api/finishEdit", {
+    async function handleEdit(content, rating, name, date, place, index) {
+        const result = await fetch(windowUrl + "/api/finishEdit", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -83,20 +73,15 @@ function MyPosts() {
             }),
         });
 
-        result
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                setLocalData(Object.entries(data));
-            })
+        const data = result.json();
+        setLocalData(Object.entries(data));
         setEditing(false);
     }
 
      //deletes post
-     function handleDelete(place, index) {
+     async function handleDelete(place, index) {
         try {
-            const result = fetch(windowUrl + "/api/delete", {
+            const result = await fetch(windowUrl + "/api/delete", {
                 method: "DELETE",
                 headers: {
                     'Content-Type':'application/json',
@@ -104,13 +89,8 @@ function MyPosts() {
                 body: JSON.stringify({key: index, location: place}),
             });
 
-            result
-                .then((response) => {
-                    return response.json();
-                })
-                .then((data) => {
-                    setLocalData(Object.entries(data));
-                })
+            const data = result.json();
+            setLocalData(Object.entries(data));
         }
         catch(error) {
             console.log(error.message);
