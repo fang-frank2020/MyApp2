@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/1856d0bb-9107-4173-b469-ec1ef7da83ab/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/Travel-Tour",
+    "appService.deploySubpath": "."
+}
