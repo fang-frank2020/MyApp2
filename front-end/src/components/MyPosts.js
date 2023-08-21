@@ -21,15 +21,19 @@ async function MyPosts() {
 
     //gets all the posts with given name
     useEffect(() => {
-        async () => {
-            const result = await fetch(windowUrl + "/api/getList", {
+            const result = fetch(windowUrl + "/api/getList", {
                 method: "GET",
             });
 
-            const data = result.json();
-            setLocalData(Object.entries(data));
+            result
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                setLocalData(Object.entries(data));
+            })
 
-    }}, [windowUrl]);
+    }, [windowUrl]);
 
     //modifies editing to true for edited post
     //retrieves post that is being edited and sets relevant post data
