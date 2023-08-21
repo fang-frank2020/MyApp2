@@ -5,7 +5,7 @@ import SinglePost from './SinglePost';
 import SearchBar from './SearchBar';
 import Cookies from 'js-cookie';
 
-function MyPosts() {
+async function MyPosts() {
     const username = Cookies.get("name");
     
     const [localData, setLocalData] = useState([]);
@@ -20,15 +20,16 @@ function MyPosts() {
     const windowUrl = window.location.origin;
 
     //gets all the posts with given name
-    useEffect(async () => {
-        const result = await fetch(windowUrl + "/api/getList", {
-            method: "GET",
-        });
+    useEffect(() => {
+        async () => {
+            const result = await fetch(windowUrl + "/api/getList", {
+                method: "GET",
+            });
 
-        const data = result.json();
-        setLocalData(Object.entries(data));
+            const data = result.json();
+            setLocalData(Object.entries(data));
 
-    }, [windowUrl]);
+    }}, [windowUrl]);
 
     //modifies editing to true for edited post
     //retrieves post that is being edited and sets relevant post data
