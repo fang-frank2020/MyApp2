@@ -5,7 +5,7 @@ import SinglePost from './SinglePost';
 import SearchBar from './SearchBar';
 import Cookies from 'js-cookie';
 
-async function MyPosts() {
+function MyPosts() {
     const username = Cookies.get("name");
     
     const [localData, setLocalData] = useState([]);
@@ -37,23 +37,28 @@ async function MyPosts() {
 
     //modifies editing to true for edited post
     //retrieves post that is being edited and sets relevant post data
-    async function startEdit(place, index) {
+    function startEdit(place, index) {
         try {
-            const result = await fetch(windowUrl + "/api/edit", {
+            const result = fetch(windowUrl + "/api/edit", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({place: place, index: index}),
             })
-    
-            const data = result.json()
-            const item = data[place][index];
-            setEditContent(item.content);
-            setEditDate(item.date);
-            setEditRating(item.rating);
-            setEditName(item.name);
-            setLocalData(Object.entries(data));
+
+            result
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                const item = data[place][index];
+                setEditContent(item.content);
+                setEditDate(item.date);
+                setEditRating(item.rating);
+                setEditName(item.name);
+                setLocalData(Object.entries(data));
+            })
         }
         catch(error) {
             console.log(error.message);
@@ -62,8 +67,8 @@ async function MyPosts() {
     }
 
     //puts edited data into database and changes existing values
-    async function handleEdit(content, rating, name, date, place, index) {
-        const result = await fetch(windowUrl + "/api/finishEdit", {
+    function handleEdit(content, rating, name, date, place, index) {
+        const result = fetch(windowUrl + "/api/finishEdit", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -78,15 +83,20 @@ async function MyPosts() {
             }),
         });
 
-        const data = result.json();
-        setLocalData(Object.entries(data));
-        setEditing(false);
+        result
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            setLocalData(Object.entries(data));
+            setEditing(false);
+        })
     }
 
      //deletes post
-     async function handleDelete(place, index) {
+     function handleDelete(place, index) {
         try {
-            const result = await fetch(windowUrl + "/api/delete", {
+            const result = fetch(windowUrl + "/api/delete", {
                 method: "DELETE",
                 headers: {
                     'Content-Type':'application/json',
@@ -94,8 +104,13 @@ async function MyPosts() {
                 body: JSON.stringify({key: index, location: place}),
             });
 
-            const data = result.json();
-            setLocalData(Object.entries(data));
+            result
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                setLocalData(Object.entries(data));
+            })
         }
         catch(error) {
             console.log(error.message);
